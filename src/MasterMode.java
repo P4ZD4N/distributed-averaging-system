@@ -17,7 +17,9 @@ public class MasterMode {
     }
 
     public void start() {
-        System.out.println("Master mode started. Listening on port " + port + "...");
+        Log.PREFIX = "M";
+
+        Log.log("Master mode started. Listening on port " + port + "...");
 
         try (DatagramSocket socket = new DatagramSocket(port)) {
             byte[] buffer = new byte[1024];
@@ -33,12 +35,12 @@ public class MasterMode {
                 Double receivedValue = extractNumberFromReceivedData(receivedData);
 
                 if (receivedValue == null) {
-                    System.out.println("Received invalid data (not a number): " + receivedData);
+                    Log.log("Received invalid data (not a number): " + receivedData);
                     continue;
                 }
 
                 if (receivedValue == -1) {
-                    System.out.println("Received -1. Shutting down...");
+                    Log.log("Received -1. Shutting down...");
                     broadcastMessage(socket, "Received -1. Shutting down...");
                     break;
                 }
@@ -46,7 +48,7 @@ public class MasterMode {
                 handleReceivedValue(socket, receivedValue);
             }
         } catch (IOException e) {
-            System.err.println("Error in master mode: " + e.getMessage());
+            Log.log("Error in master mode: " + e.getMessage());
         }
     }
 
@@ -54,13 +56,13 @@ public class MasterMode {
 
         if (value == 0) {
             double average = calculateAverage();
-            System.out.println("Calculated average: " + average);
+            Log.log("Calculated average: " + average);
             broadcastMessage(socket, "Calculated average: " + average);
             return;
         }
 
         receivedNumbers.add((int) value);
-        System.out.println("Received value: " + (int) value);
+        Log.log("Received value: " + (int) value);
     }
 
     private double calculateAverage() {
@@ -83,7 +85,7 @@ public class MasterMode {
 
         socket.setBroadcast(true);
         socket.send(broadcastPacket);
-        System.out.println("Broadcasted message: " + message);
+        Log.log("Broadcasted message: " + message);
     }
 
     private Double extractNumberFromReceivedData(String text) {
