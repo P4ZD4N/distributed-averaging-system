@@ -13,7 +13,7 @@ public class SlaveMode {
     public void start() {
         Log.PREFIX = "S";
 
-        Log.log("Slave mode started...");
+        Log.log("Slave mode started..." + "\n");
 
         DatagramSocket socket = null;
         int randomPort;
@@ -26,7 +26,7 @@ public class SlaveMode {
                     socket = new DatagramSocket(randomPort);
                     portFound = true;
                     Log.log("Found free port: " + randomPort);
-                    Log.log("Opening UDP socket...");
+                    Log.log("Opening UDP socket..." + "\n");
                 } catch (SocketException e) {
                     Log.log("Port " + randomPort + " is already in use, trying again...");
                 }

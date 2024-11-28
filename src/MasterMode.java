@@ -19,7 +19,7 @@ public class MasterMode {
     public void start() {
         Log.PREFIX = "M";
 
-        Log.log("Master mode started. Listening on port " + port + "...");
+        Log.log("Master mode started. Listening on port " + port + "..." + "\n");
 
         try (DatagramSocket socket = new DatagramSocket(port)) {
             byte[] buffer = new byte[1024];
@@ -35,20 +35,20 @@ public class MasterMode {
                 Double receivedValue = extractNumberFromReceivedData(receivedData);
 
                 if (receivedValue == null) {
-                    Log.log("Received invalid data (not a number): " + receivedData);
+                    Log.log("Received invalid data (not a number): " + receivedData + "\n");
                     continue;
                 }
 
                 if (receivedValue == -1) {
                     Log.log("Received -1. Shutting down...");
-                    broadcastMessage(socket, "Received -1. Shutting down...");
+                    broadcastMessage(socket, "Received -1. Shutting down..." + "\n");
                     break;
                 }
 
                 handleReceivedValue(socket, receivedValue);
             }
         } catch (IOException e) {
-            Log.log("Error in master mode: " + e.getMessage());
+            Log.log("Error in master mode: " + e.getMessage() + "\n");
         }
     }
 
@@ -57,12 +57,12 @@ public class MasterMode {
         if (value == 0) {
             double average = calculateAverage();
             Log.log("Calculated average: " + average);
-            broadcastMessage(socket, "Calculated average: " + average);
+            broadcastMessage(socket, "Calculated average: " + average + "\n");
             return;
         }
 
         receivedNumbers.add((int) value);
-        Log.log("Received value: " + (int) value);
+        Log.log("Received value: " + (int) value + "\n");
     }
 
     private double calculateAverage() {
