@@ -20,11 +20,9 @@ parameter. When launched, the application tries to create a UDP socket by openin
 UDP port with the number given by the ```<port>``` parameter. This operation can have two results:
 
 - The application succeeds to open the requested port. This is where the app comes in
-in master mode.
-- The application fails to open the port because it is already occupied. It is assumed that
-this situation can only occur when a given machine is already running
-one instance of this application working in master mode. In this case, the application
-starts working in slave mode.
+in **master mode**.
+- The application fails to open the port because it is already occupied. In this case, the application
+starts working in **slave mode**.
 
 ### Master mode
 
@@ -52,6 +50,7 @@ the process terminates.
 ## 🔧 Tech Stack
 
 - Java 8
+- Bash
 
 ## ▶️ Run
 
@@ -79,3 +78,37 @@ Run app
 java DAS <port> <number>
 ```
 
+## ⚙️ Bash scripts
+
+I created two additional bash scripts: `sender.sh` and `sniffer.sh`. They are intended for working with app from other computers in our local network (from any computer on which we do not have instance of master yet). 
+
+`sender.sh`
+This script can help you with sending numbers to the master from different computer. If you know IP address of the computer, on which the master is running and port, on which it receives the numbers. Usage:
+```bash
+./sender.sh <ip_address> <port> <number_to_send>
+```
+
+<br>
+
+`sniffer.sh`
+Because master sends a broadcast message to all computers in its local network on the port, on which it works, we have opportunity to receive such messages on different computer. We can do it using this script. Usage:
+```bash
+./sniffer.sh <port>
+```
+
+## 📺 Demo
+
+GIF below presents compilation of app and running it in master mode on port 3000. 10 is first number, which is remembered by master.
+![](./demo/1.gif)
+
+GIF below presents running app in slave mode, because port 3000 is already occupied. 15 and 25 is sending to master and remembered.
+![](./demo/2.gif)
+
+GIF below presents running sender and sniffer scripts on different computer. Firstly (with invocation of sender) script sends 50 to master. Next, sniffer is waiting for messages broadcasted by master.
+![](./demo/3.gif)
+
+GIF below presents running app in slave mode to send 0 and -1 numbers. 0 causes the average calculated from all numbers received so far to be broadcast. -1 shuts down app.
+![](./demo/4.gif)
+
+Image below presents effect of sending 0 and -1, which was shown on previous GIF. As you can see sniffer received both messages broadcasted by master.
+![](./demo/5.png)
